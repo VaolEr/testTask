@@ -24,10 +24,28 @@ public class TransactionUtil {
 
     public static Transaction fromTransactionTo(TransactionTo transactionTo) {
         Transaction newTransaction = new Transaction();
-        newTransaction.setId(Integer.parseInt(transactionTo.getId()));
-        newTransaction.setAmount(Double.parseDouble(transactionTo.getAmount()));
-        newTransaction.setCurrency(Currency.getInstance(transactionTo.getCurrency()));
+        newTransaction.setResult("OK");
+        try {
+            newTransaction.setId(Integer.parseInt(transactionTo.getId()));
+        } catch (NumberFormatException e){
+            newTransaction.setResult("Id format error");
+        }
+        try {
+            newTransaction.setAmount(Double.parseDouble(transactionTo.getAmount()));
+        } catch (NumberFormatException e)
+        {
+            newTransaction.setResult("Amount format error");
+        }
+        try {
+            newTransaction.setCurrency(Currency.getInstance(transactionTo.getCurrency()));
+        } catch (Exception e)
+        {
+            newTransaction.setResult("Currency format error");
+        }
         newTransaction.setComment(transactionTo.getComment());
+        newTransaction.setFilename(transactionTo.getFilename());
+        newTransaction.setLine(transactionTo.getLine());
+
         return newTransaction;
     }
 

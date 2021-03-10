@@ -13,6 +13,12 @@ public class TransactionTo implements Serializable {
     private String currency;
     //Transaction comment
     private String comment;
+    //Source file name
+    private String filename;
+    //Transaction line in source file name
+    private Long line;
+    //Parsing result
+    private String result;
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -50,14 +56,40 @@ public class TransactionTo implements Serializable {
         this.comment = comment;
     }
 
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public Long getLine() {
+        return line;
+    }
+
+    public void setLine(Long line) {
+        this.line = line;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
     @Override
     public String toString() {
         return "TransactionTo{" +
-                "id=" + id +
-                ", amount=" + amount +
-                ", currency=" + currency +
+                "id='" + id + '\'' +
+                ", amount='" + amount + '\'' +
+                ", currency='" + currency + '\'' +
                 ", comment='" + comment + '\'' +
+                ", filename='" + filename + '\'' +
+                ", line='" + line + '\'' +
+                ", result='" + result + '\'' +
                 '}';
     }
-
 }

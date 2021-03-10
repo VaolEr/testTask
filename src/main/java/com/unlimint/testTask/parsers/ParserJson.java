@@ -20,21 +20,35 @@ import static com.unlimint.testTask.util.TransactionUtil.fromTransactionTos;
 @Component
 public class ParserJson {
 
+    private String fileName;
+
+    public String getFileName() {
+        return fileName;
+    }
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
     @SuppressWarnings("unchecked")
     public List<Transaction> getListOfData(){
 
         try {
             JSONParser jsonParser = new JSONParser();
-            FileReader fileReader = new FileReader("orders.json");
+            FileReader fileReader = new FileReader(fileName);
             //Read JSON file
             Object obj = jsonParser.parse(fileReader);
             JSONArray transactionsAsJsonObjectsList = (JSONArray) obj;
-            System.out.println(transactionsAsJsonObjectsList);
+            //System.out.println(transactionsAsJsonObjectsList);
 
             List<TransactionTo> transactionTosList = new ArrayList<>();
-            //Iterate over employee array
+
+            //Iterate over transactionInJson array
             transactionsAsJsonObjectsList.forEach( transactionInJson -> transactionTosList.add(parseJsonObjectToTransactionTo( (JSONObject) transactionInJson )) );
+            for (int i = 0; i < transactionTosList.size(); i++) {
+                TransactionTo transactionTo = transactionTosList.get(i);
+                transactionTo.setLine((long) i+1);
+                transactionTo.setFilename(fileName);
+            }
             List<Transaction> transactionsList = fromTransactionTos(transactionTosList);
 
             for (Transaction transaction : transactionsList) {
@@ -72,6 +86,8 @@ public class ParserJson {
         //Get transaction comment
         transactionTo.setComment(transaction.get("comment").toString());
 
+
         return transactionTo;
     }
+
 }

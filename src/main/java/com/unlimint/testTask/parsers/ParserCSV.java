@@ -38,12 +38,11 @@ public class ParserCSV {
         //Default seperator is comma
         //Default quote character is double quote
         //Start reading from line number 2 (line numbers start from zero)
-        CSVReader reader = null;
         try {
             //Build reader instance
-            CSVReader reader1 = new CSVReader(new FileReader(fileName), ',', '"', 0);
+            CSVReader reader = new CSVReader(new FileReader(fileName), ',', '"', 0);
             //Read all rows at once
-            List<String[]> allRows = reader1.readAll();
+            List<String[]> allRows = reader.readAll();
             //Read CSV line by line and use the string array as you want
             for(String[] row : allRows){
                 System.out.println(Arrays.toString(row));
@@ -56,10 +55,14 @@ public class ParserCSV {
     @SuppressWarnings({"rawtypes", "unchecked"})
     public List<Transaction> getListOfData() throws Exception{
         CsvToBean csv = new CsvToBean();
-        //String csvFilename = "orders.csv";
         CSVReader csvReader = new CSVReader(new FileReader(fileName));
         //Set column mapping strategy
         List<TransactionTo> transactionTosList = csv.parse(setColumnMapping(), csvReader);
+        for (int i = 0; i < transactionTosList.size(); i++) {
+            TransactionTo transactionTo = transactionTosList.get(i);
+            transactionTo.setLine((long) i+1);
+            transactionTo.setFilename(fileName);
+        }
         List<Transaction> transactionsList = fromTransactionTos(transactionTosList);
 
         for (Transaction transaction : transactionsList) {
@@ -77,4 +80,5 @@ public class ParserCSV {
         strategy.setColumnMapping(columns);
         return strategy;
     }
+
 }

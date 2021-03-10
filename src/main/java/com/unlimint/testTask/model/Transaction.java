@@ -14,6 +14,12 @@ public class Transaction {
     private Currency currency;
     //Transaction comment
     private String comment;
+    //Source file name
+    private String filename;
+    //Transaction line in source file name
+    private Long line;
+    //Parsing result
+    private String result;
 
     public Integer getId() {
         return id;
@@ -47,26 +53,53 @@ public class Transaction {
         this.comment = comment;
     }
 
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public Long getLine() {
+        return line;
+    }
+
+    public void setLine(Long line) {
+        this.line = line;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
-        return id == that.id && amount == that.amount && currency.equals(that.currency) && comment.equals(that.comment);
+        return Objects.equals(id, that.id) && Objects.equals(amount, that.amount) && Objects.equals(currency, that.currency) && Objects.equals(comment, that.comment) && Objects.equals(filename, that.filename) && Objects.equals(line, that.line) && Objects.equals(result, that.result);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, amount, currency, comment);
+        return Objects.hash(id, amount, currency, comment, filename, line, result);
     }
 
     @Override
     public String toString() {
-        return "Transaction{" +
+        return "{" +
                 "id=" + id +
                 ", amount=" + amount +
                 ", currency=" + currency +
                 ", comment='" + comment + '\'' +
+                ", filename='" + filename + '\'' +
+                ", line=" + line +
+                ", result='" + result + '\'' +
                 '}';
     }
 }
