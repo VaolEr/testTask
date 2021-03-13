@@ -2,7 +2,14 @@ package com.unlimint.testTask.dto;
 
 import java.io.Serializable;
 
+//We can use lombok for simplify code
+//@Getter - realises getters for all class variables;
+//@Setter - realises setters for all class variables;
 public class TransactionTo implements Serializable {
+
+    //This class is used for transfer parsed Transaction object with string fields
+    //to Transaction object with correct type fields.
+    // Example: (TransactionTo) String currency -> (Transaction) Currency currency
 
     private static final long serialVersionUID = 1L;
     //Transaction id

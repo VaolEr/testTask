@@ -7,68 +7,52 @@ import com.unlimint.testTask.dto.TransactionTo;
 import com.unlimint.testTask.model.Transaction;
 import org.springframework.stereotype.Component;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.unlimint.testTask.util.TransactionUtil.fromTransactionTos;
 
 @Component
-public class ParserCSV {
+public class ParserCSV implements Parser{
 
     private String fileName;
-
-    public ParserCSV() {
-
-    }
 
     public String getFileName() {
         return fileName;
     }
 
+    /**
+     * Method for define file name from where
+     * CSV parser will read data
+     */
+    @Override
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
-    public void readCsv(){
-        //Build reader instance
-        //Read data.csv
-        //Default seperator is comma
-        //Default quote character is double quote
-        //Start reading from line number 2 (line numbers start from zero)
-        try {
-            //Build reader instance
-            CSVReader reader = new CSVReader(new FileReader(fileName), ',', '"', 0);
-            //Read all rows at once
-            List<String[]> allRows = reader.readAll();
-            //Read CSV line by line and use the string array as you want
-            for(String[] row : allRows){
-                System.out.println(Arrays.toString(row));
-            }
-        }  catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    @Override
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public List<Transaction> getListOfData() throws Exception{
-        CsvToBean csv = new CsvToBean();
-        CSVReader csvReader = new CSVReader(new FileReader(fileName));
-        //Set column mapping strategy
-        List<TransactionTo> transactionTosList = csv.parse(setColumnMapping(), csvReader);
-        for (int i = 0; i < transactionTosList.size(); i++) {
-            TransactionTo transactionTo = transactionTosList.get(i);
-            transactionTo.setLine((long) i+1);
-            transactionTo.setFilename(fileName);
+    public List<Transaction> getListOfData() {
+        try {
+            CsvToBean csv = new CsvToBean();
+            CSVReader csvReader = new CSVReader(new FileReader(fileName));
+            //Set column mapping strategy
+            List<TransactionTo> transactionTosList = csv.parse(setColumnMapping(), csvReader);
+            csvReader.close();
+            for (int i = 0; i < transactionTosList.size(); i++) {
+                TransactionTo transactionTo = transactionTosList.get(i);
+                transactionTo.setLine((long) i + 1);
+                transactionTo.setFilename(fileName);
+            }
+//        for (Transaction transaction : transactionsList) {
+//            System.out.println(transaction);
+//        }
+            return fromTransactionTos(transactionTosList);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        List<Transaction> transactionsList = fromTransactionTos(transactionTosList);
-
-        for (Transaction transaction : transactionsList) {
-            System.out.println(transaction);
-        }
-        return transactionsList;
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

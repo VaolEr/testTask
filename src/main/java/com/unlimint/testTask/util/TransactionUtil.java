@@ -9,6 +9,10 @@ import java.util.stream.Collectors;
 
 public class TransactionUtil {
 
+    //This class is used for convert
+    //Transaction object to TransactionTo
+    //and to the opposite way.
+
     public static TransactionTo toTransactionTo(Transaction transaction){
         TransactionTo newTransactionTo = new TransactionTo();
         newTransactionTo.setId(transaction.getId().toString());

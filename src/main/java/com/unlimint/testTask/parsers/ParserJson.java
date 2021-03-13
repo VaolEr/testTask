@@ -1,6 +1,5 @@
 package com.unlimint.testTask.parsers;
 
-//import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unlimint.testTask.dto.TransactionTo;
 import com.unlimint.testTask.model.Transaction;
 import org.json.simple.JSONArray;
@@ -9,7 +8,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Component;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -18,18 +16,25 @@ import java.util.List;
 import static com.unlimint.testTask.util.TransactionUtil.fromTransactionTos;
 
 @Component
-public class ParserJson {
+public class ParserJson implements Parser{
 
     private String fileName;
 
     public String getFileName() {
         return fileName;
     }
+
+    /**
+     * Method for define file name from where
+     * Json parser will read data
+     */
+    @Override
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public List<Transaction> getListOfData(){
 
         try {
@@ -38,8 +43,7 @@ public class ParserJson {
             //Read JSON file
             Object obj = jsonParser.parse(fileReader);
             JSONArray transactionsAsJsonObjectsList = (JSONArray) obj;
-            //System.out.println(transactionsAsJsonObjectsList);
-
+            fileReader.close();
             List<TransactionTo> transactionTosList = new ArrayList<>();
 
             //Iterate over transactionInJson array
@@ -49,25 +53,15 @@ public class ParserJson {
                 transactionTo.setLine((long) i+1);
                 transactionTo.setFilename(fileName);
             }
-            List<Transaction> transactionsList = fromTransactionTos(transactionTosList);
-
-            for (Transaction transaction : transactionsList) {
-                System.out.println(transaction);
-            }
-
-            return transactionsList;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        } catch (ParseException e) {
+//            for (Transaction transaction : transactionsList) {
+//                System.out.println(transaction);
+//            }
+            return fromTransactionTos(transactionTosList);
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
             return null;
         }
-//        ObjectMapper mapper = new ObjectMapper();
-//        TransactionTo transactionTo = mapper.readValue(jsonString, TransactionTo.class);
+
     }
 
     private static TransactionTo parseJsonObjectToTransactionTo(JSONObject transaction)
@@ -85,7 +79,6 @@ public class ParserJson {
 
         //Get transaction comment
         transactionTo.setComment(transaction.get("comment").toString());
-
 
         return transactionTo;
     }

@@ -1,12 +1,13 @@
 package com.unlimint.testTask.model;
 
-import java.io.Serializable;
 import java.util.Currency;
 import java.util.Objects;
 
 public class Transaction {
 
-    //Transaction id
+    //This class describes the model of transaction
+
+    //Transaction id from file
     private Integer id;
     //Transaction amount
     private Double amount;
@@ -20,6 +21,15 @@ public class Transaction {
     private Long line;
     //Parsing result
     private String result;
+    //Transactions count
+    private static Integer transactionsCount = 0;
+    //Transaction Id after parsing
+    private final Integer transactionId;
+
+    public Transaction(){
+        this.transactionId = transactionsCount;
+        transactionsCount++;
+    }
 
     public Integer getId() {
         return id;
@@ -93,7 +103,7 @@ public class Transaction {
     @Override
     public String toString() {
         return "{" +
-                "id=" + id +
+                "id=" + transactionId +
                 ", amount=" + amount +
                 ", currency=" + currency +
                 ", comment='" + comment + '\'' +
